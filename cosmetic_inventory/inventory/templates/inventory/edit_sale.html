@@ -1,0 +1,36 @@
+{% extends 'inventory/base.html' %}
+{% block title %}Edit Sale #{{ sale.id }}{% endblock %}
+{% block content %}
+<h2>Edit Sale #{{ sale.id }}</h2>
+<form method="POST">
+    {% csrf_token %}
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Product</th>
+                <th>Current Qty</th>
+                <th>New Qty</th>
+                <th>Price (Ksh)</th>
+                <th>Subtotal (Ksh)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in sale.items.all %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>
+                    <input type="number" name="qty_{{ item.product.id }}" min="0" value="{{ item.quantity }}" class="form-control">
+                </td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Update Sale</button>
+    <a href="{% url 'sale_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
+
+    

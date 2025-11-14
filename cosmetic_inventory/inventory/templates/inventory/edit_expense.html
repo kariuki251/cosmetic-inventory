@@ -1,0 +1,31 @@
+{% extends 'inventory/base.html' %}
+{% block title %}Edit Expense{% endblock %}
+
+{% block content %}
+<h2>Edit Expense</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <input type="text" name="description" value="{{ expense.description }}" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select" required>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if cat == expense.category %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Amount (KSh)</label>
+        <input type="number" name="amount" value="{{ expense.amount }}" step="0.01" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-warning">Update Expense</button>
+    <a href="{% url 'expense_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

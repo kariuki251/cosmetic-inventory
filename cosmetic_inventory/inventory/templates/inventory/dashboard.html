@@ -1,0 +1,180 @@
+{% extends 'inventory/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- Sidebar -->
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar pt-4">
+      <h5>Navigation</h5>
+      <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'product_list' %}">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'sale_list' %}">Sales</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'expense_list' %}">Expense</a></li>
+    </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="col-md-10 ms-sm-auto col-lg-10 px-4">
+
+      <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2"><b><i>Thaka Beauty Hub Dashboard</i></b>💄</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Settings</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards Row -->
+      <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+          <div class="card text-white bg-primary shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title">Total Products</h6>
+              <h3 class="card-text">{{ total_products }}</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <div class="card text-white bg-success shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title">Total Sales (KSh)</h6>
+              <h3 class="card-text">{{ total_sales|floatformat:2 }}</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <div class="card text-white bg-danger shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title">Total Expenses (KSh)</h6>
+              <h3 class="card-text">{{ total_expenses|floatformat:2 }}</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <div class="card text-white bg-warning shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title">Profit (KSh)</h6>
+              <h3 class="card-text">{{ profit|floatformat:2 }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Panels Row -->
+      <div class="row mb-4">
+        <!-- Top Products -->
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-header">
+              Top Products
+            </div>
+            <ul class="list-group list-group-flush">
+              {% for product in top_products %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  {{ product.name }}
+                  <span class="badge bg-primary rounded-pill">{{ product.quantity }}</span>
+                </li>
+              {% empty %}
+                <li class="list-group-item">No products yet.</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        <!-- Expense Breakdown -->
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-header">
+              Expenses by Category
+            </div>
+            <ul class="list-group list-group-flush">
+              {% for expense in expense_breakdown %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  {{ expense.category__name|default:"Uncategorized" }}
+                  <span class="badge bg-danger rounded-pill">{{ expense.total|floatformat:2 }}</span>
+                </li>
+              {% empty %}
+                <li class="list-group-item">No expenses recorded.</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="row mb-4">
+        <!-- Sales Trend Chart -->
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-header">Sales Trend</div>
+            <div class="card-body">
+              <canvas id="salesChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Expense Pie Chart -->
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-header">Expense Breakdown</div>
+            <div class="card-body">
+              <canvas id="expenseChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Sales Trend Chart
+  const salesCtx = document.getElementById('salesChart').getContext('2d');
+  const salesChart = new Chart(salesCtx, {
+    type: 'line',
+    data: {
+      labels: [{% for sale in sales %}'{{ sale.date|date:"M d" }}',{% endfor %}],
+      datasets: [{
+        label: 'Sales (KSh)',
+        data: [{% for sale in sales %}{{ sale.total_amount }},{% endfor %}],
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  // Expense Pie Chart
+  const expenseCtx = document.getElementById('expenseChart').getContext('2d');
+  const expenseChart = new Chart(expenseCtx, {
+    type: 'pie',
+    data: {
+      labels: [{% for expense in expense_breakdown %}'{{ expense.category__name|default:"Uncategorized" }}',{% endfor %}],
+      datasets: [{
+        data: [{% for expense in expense_breakdown %}{{ expense.total }},{% endfor %}],
+        backgroundColor: ['#FF6384','#36A2EB','#FFCE56','#8e5ea2','#3cba9f','#e8c3b9']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+</script>
+{% endblock %}

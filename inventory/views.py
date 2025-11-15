@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Category, Expense, ExpenseCategory
@@ -11,7 +11,7 @@ def dashboard(request):
 def product_list(request):
     products = Product.objects.all()
     return render(request, 'inventory/product_list.html', {'products': products})
-@login_required(login_url='/admin/login/')
+
 def add_product(request):
     if request.method == 'POST':
         name = request.POST.get('name', '')
@@ -21,7 +21,7 @@ def add_product(request):
         return redirect('product_list')
     
     return render(request, 'inventory/add_product.html')
-@login_required(login_url='/admin/login/')
+
 def edit_product(request, id):
     product = get_object_or_404(Product, id=id)
     categories = Category.objects.all()
@@ -34,7 +34,7 @@ def edit_product(request, id):
         return redirect('product_list')
 
     return render(request, 'inventory/edit_product.html', {'product': product})
-@login_required(login_url='/admin/login/')
+
 def delete_product(request, id):
     product = get_object_or_404(Product, id=id)
     product.delete()
@@ -51,7 +51,6 @@ import datetime
 # --------------------------
 # ADD SALE
 # --------------------------
-@login_required(login_url='/admin/login/')
 def add_sale(request):
     products = Product.objects.all()
 
@@ -90,7 +89,6 @@ def add_sale(request):
 # --------------------------
 # EDIT SALE
 # --------------------------
-@login_required(login_url='/admin/login/')
 def edit_sale(request, sale_id):
     sale = get_object_or_404(Sale, id=sale_id)
     products = Product.objects.all()
@@ -121,7 +119,6 @@ def edit_sale(request, sale_id):
 # --------------------------
 # DELETE SALE
 # --------------------------
-@login_required(login_url='/admin/login/')
 def delete_sale(request, sale_id):
     sale = get_object_or_404(Sale, id=sale_id)
 
@@ -151,7 +148,6 @@ def expense_list(request):
     return render(request, 'inventory/expense_list.html', {'expenses': expenses})
 
 # ➕ Add expense
-@login_required(login_url='/admin/login/')
 def add_expense(request):
     categories = ExpenseCategory.objects.all()
 
@@ -171,7 +167,6 @@ def add_expense(request):
     return render(request, 'inventory/add_expense.html', {'categories': categories})
 
 # ✏ Edit expense
-@login_required(login_url='/admin/login/')
 def edit_expense(request, expense_id):
     expense = get_object_or_404(Expense, id=expense_id)
     categories = ExpenseCategory.objects.all()
@@ -187,7 +182,6 @@ def edit_expense(request, expense_id):
     return render(request, 'inventory/edit_expense.html', {'expense': expense, 'categories': categories})
 
 # ❌ Delete expense
-@login_required(login_url='/admin/login/')
 def delete_expense(request, expense_id):
     expense = get_object_or_404(Expense, id=expense_id)
     if request.method == 'POST':

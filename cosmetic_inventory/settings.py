@@ -24,7 +24,7 @@ from decouple import config
 
 SECRET_KEY = config('SECRET_KEY')  # we’ll set this in environment variables
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ['your-app-name.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=''). split(',')
 
 
 

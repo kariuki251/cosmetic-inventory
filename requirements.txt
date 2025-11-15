@@ -1,0 +1,12 @@
+antiorm==1.2.1
+asgiref==3.10.0
+db==0.1.1
+dj-database-url==3.0.1
+Django==5.2.8
+gunicorn==23.0.0
+packaging==25.0
+psycopg2-binary==2.9.11
+python-decouple==3.8
+sqlparse==0.5.3
+tzdata==2025.2
+whitenoise==6.11.0

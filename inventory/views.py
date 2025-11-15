@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Category, Expense, ExpenseCategory
@@ -7,7 +7,7 @@ from .models import Product, Category, Expense, ExpenseCategory
 def dashboard(request):
     products = Product.objects.all()
     return render(request, 'inventory/dashboard.html', {'products': products})
-
+@login_required(login_url='/admin/login/')
 def product_list(request):
     products = Product.objects.all()
     return render(request, 'inventory/product_list.html', {'products': products})

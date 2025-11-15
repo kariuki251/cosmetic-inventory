@@ -1,0 +1,31 @@
+{% extends 'inventory/base.html' %}
+{% block title %}Add Expense{% endblock %}
+
+{% block content %}
+<h2>Add Expense</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <input type="text" name="description" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select" required>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Amount (KSh)</label>
+        <input type="number" name="amount" step="0.01" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Expense</button>
+    <a href="{% url 'expense_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

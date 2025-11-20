@@ -3,6 +3,10 @@
 {% block title %}Add Sale{% endblock %}
 
 {% block content %}
+{% if user.is_authenticated %}
+{% else %}
+    <p>You must <a href="{% url 'login' %}">login</a> to add sales.</p>
+{% endif %}
 <h2 class="mb-4">Add Sale</h2>
 
 <form method="POST">

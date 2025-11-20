@@ -1,11 +1,6 @@
 {% extends 'inventory/base.html' %}
 {% block title %}Edit Expense{% endblock %}
 
-{% block content %}
-{% if user.is_authenticated %}
-{% else %}
-    <p>You must <a href="{% url 'login' %}">login</a> to edit expenses.</p>
-{% endif %}
 <h2>Edit Expense</h2>
 
 <form method="POST">

@@ -1,12 +1,7 @@
 {% extends 'inventory/base.html' %}
 {% block title %}Add Expense{% endblock %}
 
-{% if user.is_authenticated %}
-{% else %}
-    <p>You must <a href="{% url 'login' %}">login</a> to add expenses.</p>
-{% endif %}
 <h2>Add Expense</h2>
-
 <form method="POST">
     {% csrf_token %}
     <div class="mb-3">

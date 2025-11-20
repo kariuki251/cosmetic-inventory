@@ -153,7 +153,6 @@ def expense_list(request):
     return render(request, 'inventory/expense_list.html', {'expenses': expenses})
 
 # ➕ Add expense
-@login_required
 def add_expense(request):
     categories = ExpenseCategory.objects.all()
 
@@ -173,7 +172,6 @@ def add_expense(request):
     return render(request, 'inventory/add_expense.html', {'categories': categories})
 
 # ✏ Edit expense
-@login_required
 def edit_expense(request, expense_id):
     expense = get_object_or_404(Expense, id=expense_id)
     categories = ExpenseCategory.objects.all()
@@ -189,7 +187,6 @@ def edit_expense(request, expense_id):
     return render(request, 'inventory/edit_expense.html', {'expense': expense, 'categories': categories})
 
 # ❌ Delete expense
-@login_required
 def delete_expense(request, expense_id):
     expense = get_object_or_404(Expense, id=expense_id)
     if request.method == 'POST':

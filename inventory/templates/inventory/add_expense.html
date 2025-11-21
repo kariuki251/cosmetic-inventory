@@ -1,6 +1,7 @@
 {% extends 'inventory/base.html' %}
 {% block title %}Add Expense{% endblock %}
 
+{% block content %}
 <h2>Add Expense</h2>
 <form method="POST">
     {% csrf_token %}

@@ -1,5 +1,9 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
+{% if user.is_authenticated %}
+{% else %}
+    <p>You must <a href="{% url 'login' %}">login</a> to edit products.</p>
+{% endif %}
 <div class="container mt-4">
   <h2 class="mb-4">Edit Product</h2>
   <form method="POST">

@@ -1,6 +1,10 @@
 {% extends 'inventory/base.html' %}
 {% block title %}Edit Sale #{{ sale.id }}{% endblock %}
 {% block content %}
+{% if user.is_authenticated %}
+{% else %}
+    <p>You must <a href="{% url 'login' %}">login</a> to edit sales.</p>
+{% endif %}
 <h2>Edit Sale #{{ sale.id }}</h2>
 <form method="POST">
     {% csrf_token %}
